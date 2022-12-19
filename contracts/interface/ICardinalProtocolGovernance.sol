@@ -1,10 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
+
+/* [IMPORT] */
+import "@openzeppelin/contracts/access/IAccessControlEnumerable.sol";
+
+
 /**
 * @title ICardinalProtocolGovernance
 */
-interface ICardinalProtocolGovernance
+interface ICardinalProtocolGovernance is
+	IAccessControlEnumerable
 {
 	/**
 	* @notice AccessControl Role
