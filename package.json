@@ -1,20 +1,20 @@
 {
-  "name": "@cardinal-protocol/v1-sdk",
-  "version": "0.0.7",
+  "name": "@igloo-fi/v1-sdk",
+  "version": "0.0.1",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cardinal-protocol/v1-sdk.git"
+    "url": "git+https://github.com/igloo-fi/v1-sdk.git"
   },
-  "author": "cardinal-protocol",
+  "author": "igloo-fi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cardinal-protocol/v1-sdk/issues"
+    "url": "https://github.com/igloo-fi/v1-sdk/issues"
   },
-  "homepage": "https://github.com/cardinal-protocol/v1-sdk#readme",
+  "homepage": "https://github.com/igloo-fi/v1-sdk#readme",
   "description": "",
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "^2.2.1",
