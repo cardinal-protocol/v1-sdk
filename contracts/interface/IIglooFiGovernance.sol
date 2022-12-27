@@ -7,9 +7,9 @@ import "@openzeppelin/contracts/access/IAccessControlEnumerable.sol";
 
 
 /**
-* @title ICardinalProtocolGovernance
+* @title IIglooFiGovernance
 */
-interface ICardinalProtocolGovernance is
+interface IIglooFiGovernance is
 	IAccessControlEnumerable
 {
 	/**
