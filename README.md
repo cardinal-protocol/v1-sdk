@@ -1,1 +1,1 @@
-# Cardinal Protocol - V1-SDK
+# Igloo Fi - V1-SDK
