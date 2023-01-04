@@ -13,30 +13,29 @@ interface IIglooFiGovernance is
 	IAccessControlEnumerable
 {
 	/**
-	* @notice AccessControlEnumerable role
-	* @dev [view-bytes32]
-	* @return {bytes32} keccak256 value
+	* @notice Governance Roles
+	*
+	* @dev [!restriction]
+	* @dev [view][mapping]
+	*
+	* @return {bytes32}
 	*/
-	function S() external view returns (bytes32);
+	function governanceRoles(string memory role)
+		external
+		view
+		returns (bytes32)
+	;
 
 	/**
-	* @notice AccessControlEnumerable role
-	* @dev [view-bytes32]
-	* @return {bytes32} keccak256 value
+	* @notice Adds a role to `_governanceRoles`
+	*
+	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE 
+	* @dev [add] `_governanceRoles`
+	*      [update] `AccessControlEnumerable` → `_roles`
+	*
+	* @param role {string}
 	*/
-	function A() external view returns (bytes32);
-
-	/**
-	* @notice AccessControlEnumerable role
-	* @dev [view-bytes32]
-	* @return {bytes32} keccak256 value
-	*/
-	function B() external view returns (bytes32);
-
-	/**
-	* @notice AccessControlEnumerable role
-	* @dev [view-bytes32]
-	* @return {bytes32} keccak256 value
-	*/
-	function C() external view returns (bytes32);
+	function addGovernanceRole(string memory role)
+		external
+	;
 }
