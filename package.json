@@ -1,6 +1,6 @@
 {
   "name": "@igloo-fi/v1-sdk",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +17,7 @@
   "homepage": "https://github.com/igloo-fi/v1-sdk#readme",
   "description": "",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.0",
-    "@openzeppelin/contracts-upgradeable": "^4.8.0"
+    "@openzeppelin/contracts": "4.8.0",
+    "@openzeppelin/contracts-upgradeable": "4.8.0"
   }
 }
