@@ -2,7 +2,7 @@
 pragma solidity ^0.8.1;
 
 
-import { AccessControlEnumerable } from "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import { IAccessControlEnumerable } from "@openzeppelin/contracts/access/IAccessControlEnumerable.sol";
 import { IERC1271 } from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 
@@ -25,7 +25,7 @@ struct WithdrawalRequest {
 * @title IIglooFiV1Vault
 */
 interface IIglooFiV1Vault is
-	AccessControlEnumerable,
+	IAccessControlEnumerable,
 	IERC1271
 {
 	/**
