@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.1;
+pragma solidity ^0.8.18;
 
 
 import { IAccessControlEnumerable } from "@openzeppelin/contracts/access/IAccessControlEnumerable.sol";
@@ -29,15 +29,16 @@ interface IIglooFiV1Vault is
 	IAccessControlEnumerable,
 	IERC1271
 {
+	event CreatedWithdrawalRequest(uint256 withdrawalRequestId);
 	event DeletedWithdrawalRequest(uint256 withdrawalRequestId);
-	event UpdatedWithdrawalRequest(WithdrawalRequest withdrawalRequest);
-	event UpdatedRequiredVoteCount(uint256 forVoteCountRequired);
+	event TokensWithdrawn(address indexed withdrawer, address indexed token, uint256 amount);
+	event UpdatedAgainstVoteCountRequired(uint256 againstVoteCountRequired);
+	event UpdatedForVoteCountRequired(uint256 forVoteCountRequired);
 	event UpdatedSignatureManger(address signatureManager);
 	event UpdatedWithdrawalDelaySeconds(uint256 withdrawalDelaySeconds);
-	event CreatedWithdrawalRequest(uint256 withdrawalRequest);
+	event UpdatedWithdrawalRequest(WithdrawalRequest withdrawalRequest);
 	event VoterVoted(uint256 withdrawalRequestId, address indexed voter, bool vote);
 	event WithdrawalRequestReadyToBeProccessed(uint256 withdrawalRequestId);
-	event TokensWithdrawn(address indexed withdrawer, address indexed token, uint256 amount);
 
 
 	receive ()
@@ -180,13 +181,24 @@ interface IIglooFiV1Vault is
 	;
 
 	/**
-	* @notice Update the required approved votes
+	* @notice Update Against Vote Count Required
+	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [update] `againstVoteCountRequired`
+	* @param _againstVoteCountRequired {uint256}
+	* Emits: `UpdatedAgainstVoteCountRequired`
+	*/
+	function updateAgainstVoteCountRequired(uint256 _againstVoteCountRequired)
+		external
+	;
+
+	/**
+	* @notice Update For Vote Count Required
 	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
 	* @dev [update] `forVoteCountRequired`
 	* @param _forVoteCountRequired {uint256}
 	* Emits: `UpdatedRequiredVoteCount`
 	*/
-	function updateRequiredVoteCount(uint256 _forVoteCountRequired)
+	function updateForVoteCountRequired(uint256 _forVoteCountRequired)
 		external
 	;
 
@@ -243,7 +255,6 @@ interface IIglooFiV1Vault is
 	* @notice Vote on withdrawalRequest
 	* @dev [restriction] AccessControlEnumerable → VOTER
 	* @dev [update] `_withdrawalRequest`
-	*      [update] `_withdrawalRequestVotedVoters`
 	* @param withdrawalRequestId {uint256}
 	* @param vote {bool} true (approve) or false (deny)
 	* Emits: `WithdrawalRequestReadyToBeProccessed`
