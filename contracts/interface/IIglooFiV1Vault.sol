@@ -15,7 +15,8 @@ struct WithdrawalRequest {
 	address token;
 	uint256 amount;
 	uint256 tokenId;
-	uint256 voteCount;
+	uint256 voteForCount;
+	//uint256 voteAgainstCount;
 	uint256 latestRelevantApproveVoteTime;
 	address[] votedVoters;
 }
@@ -28,48 +29,15 @@ interface IIglooFiV1Vault is
 	IAccessControlEnumerable,
 	IERC1271
 {
-	/**
-	* @dev Emits when a `WithdrawalRequest` is deleted
-	*/
-	event DeletedWithdrawalRequest(uint256 withdrawalRequest);
-
-	/**
-	* @dev Emits when a `WithdrawalRequest` is created
-	*/
-	event CreatedWithdrawalRequest(uint256 withdrawalRequest);
-
-	/**
-	* @dev Emits when a voter has voted
-	*/
-	event VoterVoted(uint256 withdrawalRequestId, address indexed voter, bool vote);
-
-	/**
-	* @dev Emit when a WithdrawalRequest is ready to be processed
-	*/
-	event WithdrawalRequestReadyToBeProccessed(uint256 withdrawalRequestId);
-
-	/**
-	* @dev Emits when tokens are withdrawn
-	*/
-	event TokensWithdrawn(address indexed withdrawer, address indexed token, uint256 amount);
-
-	/**
-	* @dev Emits when `requiredVoteCount` are updated
-	*/
-	event UpdatedRequiredVoteCount(uint256 requiredVoteCount);
-
-	/**
-	* @dev Emits when `withdrawalDelaySeconds` is updated
-	*/
+	event DeletedWithdrawalRequest(uint256 withdrawalRequestId);
+	event UpdatedWithdrawalRequest(WithdrawalRequest withdrawalRequest);
+	event UpdatedRequiredVoteCount(uint256 forVoteCountRequired);
+	event UpdatedSignatureManger(address signatureManager);
 	event UpdatedWithdrawalDelaySeconds(uint256 withdrawalDelaySeconds);
-
-	/**
-	* @dev Emits when `_withdrawalRequest[withdrawalRequestId].latestRelevantApproveVoteTime` is updated
-	*/
-	event UpdatedWithdrawalRequestLastSignificantApproveVote(
-		uint256 withdrawalRequestId,
-		uint256 latestRelevantApproveVoteTime
-	);
+	event CreatedWithdrawalRequest(uint256 withdrawalRequest);
+	event VoterVoted(uint256 withdrawalRequestId, address indexed voter, bool vote);
+	event WithdrawalRequestReadyToBeProccessed(uint256 withdrawalRequestId);
+	event TokensWithdrawn(address indexed withdrawer, address indexed token, uint256 amount);
 
 
 	receive ()
@@ -107,12 +75,24 @@ interface IIglooFiV1Vault is
 	;
 
 	/**
-	* @notice Required signatures for approval
+	* @notice Required For Vote Count
 	* @dev [!restriction]
 	* @dev [view-uint256]
 	* @return {uint256}
 	*/
-	function requiredVoteCount()
+	function forVoteCountRequired()
+		external
+		view
+		returns (uint256)
+	;
+
+	/**
+	* @notice Against Vote Count Required
+	* @dev [!restriction]
+	* @dev [view-uint256]
+	* @return {uint256}
+	*/
+	function againstVoteCountRequired()
 		external
 		view
 		returns (uint256)
@@ -132,7 +112,7 @@ interface IIglooFiV1Vault is
 
 
 	/**
-	* @notice Getter for active WithdrawlRequests
+	* @notice Getter for active withdrawlRequests
 	* @dev [!restriction]
 	* @dev [view-uint256[]]
 	* @return {uint256[]}
@@ -157,73 +137,6 @@ interface IIglooFiV1Vault is
 
 
 	/**
-	* @notice Create a WithdrawalRequest
-	* @dev [restriction] AccessControlEnumerable → VOTER
-	* @dev [increment] `_withdrawalRequestId`
-	*      [add] `_withdrawalRequest` value
-	*      [push-into] `_withdrawalRequestIds`
-	* @param forEther {bool} If to be withdrawn asset is Ether
-	* @param forERC20 {bool} If to be withdrawn asset is ERC20
-	* @param forERC721 {bool} If to be withdrawn asset is ERC721
-	* @param to {address} Address the withdrawn tokens will be sent
-	* @param tokenAddress {address}
-	* @param amount {uint256} Amount to be withdrawn
-	* @param tokenId {uint256} erc721 token id
-	* @return {uint256} `_withdrawalRequestId`
-	* Emits: `CreatedWithdrawalRequest`
-	*/
-	function createWithdrawalRequest(
-		bool forEther,
-		bool forERC20,
-		bool forERC721,
-		address to,
-		address tokenAddress,
-		uint256 amount,
-		uint256 tokenId
-	)
-		external
-		returns (uint256)
-	;
-
-	/**
-	* @notice Vote on WithdrawalRequest
-	* @dev [restriction] AccessControlEnumerable → VOTER
-	* @dev [update] `_withdrawalRequest`
-	*      [update] `_withdrawalRequestVotedVoters`
-	* @param withdrawalRequestId {uint256}
-	* @param vote {bool} true (approve) or false (deny)
-	* Emits: `WithdrawalRequestReadyToBeProccessed`
-	* Emits: `VoterVoted`
-	*/
-	function voteOnWithdrawalRequest(uint256 withdrawalRequestId, bool vote)
-		external
-	;
-
-	/**
-	* @notice Process WithdrawalRequest with given `withdrawalRequestId`
-	* @dev [restriction] AccessControlEnumerable → VOTER
-	* @dev [erc20-transfer]
-	*      [decrement] `_tokenBalance`
-	*      [call][internal] `_deleteWithdrawalRequest`
-	* @param withdrawalRequestId {uint256} Id of the WithdrawalRequest
-	* Emits: `TokensWithdrawn`
-	*/
-	function processWithdrawalRequest(uint256 withdrawalRequestId)
-		external
-	;
-
-
-	/**
-	* @notice Update Signature Manager Contract
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
-	* @dev [update] `signatureManager`
-	* @param _signatureManager {address}
-	*/
-	function updateSignatureManager(address _signatureManager)
-		external
-	;
-
-	/**
 	* @notice Assign VOTER to an address on AccessControlEnumerable
 	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
 	* @dev [add] address to VOTER on `AccessControlEnumerable`
@@ -244,13 +157,46 @@ interface IIglooFiV1Vault is
 	;
 
 	/**
+	* @notice Delete withdrawalRequest & all associated values
+	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [call][internal] {_deleteWithdrawalRequest}
+	* @param withdrawalRequestId {uint256}
+	* Emits: `DeletedWithdrawalRequest`
+	*/
+	function deleteWithdrawalRequest(uint256 withdrawalRequestId)
+		external
+	;
+
+	/**
+	* @notice Update withdrawalRequest
+	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [update] `_withdrawalRequest`
+	* @param withdrawalRequestId {uint256}
+	* @param __withdrawalRequest {WithdrawalRequest}
+	* Emits: `UpdatedWithdrawalRequest`
+	*/
+	function updateWithdrawalRequest(uint256 withdrawalRequestId, WithdrawalRequest memory __withdrawalRequest)
+		external
+	;
+
+	/**
 	* @notice Update the required approved votes
 	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
-	* @dev [update] `requiredVoteCount`
-	* @param newRequiredVoteCount {uint256}
+	* @dev [update] `forVoteCountRequired`
+	* @param _forVoteCountRequired {uint256}
 	* Emits: `UpdatedRequiredVoteCount`
 	*/
-	function updateRequiredVoteCount(uint256 newRequiredVoteCount)
+	function updateRequiredVoteCount(uint256 _forVoteCountRequired)
+		external
+	;
+
+	/**
+	* @notice Update Signature Manager Contract
+	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [update] `signatureManager`
+	* @param _signatureManager {address}
+	*/
+	function updateSignatureManager(address _signatureManager)
 		external
 	;
 
@@ -258,38 +204,65 @@ interface IIglooFiV1Vault is
 	* @notice Update `withdrawalDelaySeconds`
 	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
 	* @dev [update] `withdrawalDelaySeconds` to new value
-	* @param newWithdrawalDelaySeconds {uint256}
+	* @param _withdrawalDelaySeconds {uint256}
 	* Emits: `UpdatedWithdrawalDelaySeconds`
 	*/
-	function updateWithdrawalDelaySeconds(uint256 newWithdrawalDelaySeconds)
+	function updateWithdrawalDelaySeconds(uint256 _withdrawalDelaySeconds)
 		external
 	;
 
+
 	/**
-	* @notice 
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
-	* @dev [update] WithdrawalRequest within `_withdrawalRequest`
-	* @param withdrawalRequestId {uint256}
-	* @param arithmaticSign {bool} true → Add | false → Subtract 
-	* @param timeInSeconds {uint256}
-	* Emits: `UpdatedWithdrawalRequestLastSignificantApproveVote`
+	* @notice Create a withdrawalRequest
+	* @dev [restriction] AccessControlEnumerable → VOTER
+	* @dev [increment] `_withdrawalRequestId`
+	*      [add] `_withdrawalRequest` value
+	*      [push-into] `_withdrawalRequestIds`
+	* @param forEther {bool} If to be withdrawn asset is Ether
+	* @param forERC20 {bool} If to be withdrawn asset is ERC20
+	* @param forERC721 {bool} If to be withdrawn asset is ERC721
+	* @param to {address} Address the withdrawn tokens will be sent
+	* @param tokenAddress {address} Token address contract
+	* @param amount {uint256} Amount to be withdrawn
+	* @param tokenId {uint256} erc721 token id
+	* Emits: `CreatedWithdrawalRequest`
 	*/
-	function updateWithdrawalRequestLatestRelevantApproveVoteTime(
-		uint256 withdrawalRequestId,
-		bool arithmaticSign,
-		uint256 timeInSeconds
+	function createWithdrawalRequest(
+		bool forEther,
+		bool forERC20,
+		bool forERC721,
+		address to,
+		address tokenAddress,
+		uint256 amount,
+		uint256 tokenId
 	)
 		external
 	;
 
 	/**
-	* @notice Delete WithdrawalRequest & all associated values
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
-	* @dev [call][internal] {_deleteWithdrawalRequest}
+	* @notice Vote on withdrawalRequest
+	* @dev [restriction] AccessControlEnumerable → VOTER
+	* @dev [update] `_withdrawalRequest`
+	*      [update] `_withdrawalRequestVotedVoters`
 	* @param withdrawalRequestId {uint256}
-	* Emits: `DeletedWithdrawalRequest`
+	* @param vote {bool} true (approve) or false (deny)
+	* Emits: `WithdrawalRequestReadyToBeProccessed`
+	* Emits: `VoterVoted`
 	*/
-	function deleteWithdrawalRequest(uint256 withdrawalRequestId)
+	function voteOnWithdrawalRequest(uint256 withdrawalRequestId, bool vote)
+		external
+	;
+
+	/**
+	* @notice Process withdrawalRequest with given `withdrawalRequestId`
+	* @dev [restriction] AccessControlEnumerable → VOTER
+	* @dev [erc20-transfer]
+	*      [decrement] `_tokenBalance`
+	*      [call][internal] `_deleteWithdrawalRequest`
+	* @param withdrawalRequestId {uint256} Id of the WithdrawalRequest
+	* Emits: `TokensWithdrawn`
+	*/
+	function processWithdrawalRequest(uint256 withdrawalRequestId)
 		external
 	;
 }
