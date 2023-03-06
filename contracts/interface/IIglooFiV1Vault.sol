@@ -16,7 +16,7 @@ struct WithdrawalRequest {
 	uint256 amount;
 	uint256 tokenId;
 	uint256 voteForCount;
-	//uint256 voteAgainstCount;
+	uint256 voteAgainstCount;
 	uint256 latestRelevantApproveVoteTime;
 	address[] votedVoters;
 }
