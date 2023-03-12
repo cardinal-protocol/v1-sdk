@@ -1,5 +1,5 @@
 {
-  "name": "@igloo-fi/v1-sdk",
+  "name": "@yield-sync/v1-sdk",
   "version": "0.0.17",
   "main": "index.js",
   "scripts": {
@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/igloo-fi/v1-sdk.git"
+    "url": "git+https://github.com/yield-sync/v1-sdk.git"
   },
-  "author": "igloo-fi",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/igloo-fi/v1-sdk/issues"
+    "url": "https://github.com/yield-sync/v1-sdk/issues"
   },
-  "homepage": "https://github.com/igloo-fi/v1-sdk#readme",
+  "homepage": "https://github.com/yield-sync/v1-sdk#readme",
   "description": "",
   "dependencies": {
     "@openzeppelin/contracts": "4.8.0",
