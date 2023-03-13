@@ -1,36 +1,36 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.18;
 
 
 import "@openzeppelin/contracts/access/IAccessControlEnumerable.sol";
 
 
 /**
-* @title IIglooFiGovernance
+* @title IYieldSyncGovernance
 */
-interface IIglooFiGovernance is
+interface IYieldSyncGovernance is
 	IAccessControlEnumerable
 {
 	/**
-	* @notice Governance Roles
+	* @notice Get
 	* @dev [!restriction]
-	* @dev [view][mapping]
+	* @dev [view-mapping]
 	* @return {bytes32}
 	*/
-	function governanceRoles(string memory role)
+	function role_roleHash(string memory role)
 		external
 		view
 		returns (bytes32)
 	;
 
 	/**
-	* @notice Adds a role to `_governanceRoles`
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE 
-	* @dev [add] `_governanceRoles`
-	*      [update] `AccessControlEnumerable` → `_roles`
+	* @notice Add to role_roleHash
+	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [add] `role_roleHash`
+	*      [update] `AccessControlEnumerable` → `_role`
 	* @param role {string}
 	*/
-	function addGovernanceRole(string memory role)
+	function addRole_roleHash(string memory role)
 		external
 	;
 }

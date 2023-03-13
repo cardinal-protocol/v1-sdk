@@ -1,69 +1,48 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.18;
 
 
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import { AccessControlEnumerable } from "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
-import "./interface/IYieldSyncGovernance.sol";
+import { IYieldSyncGovernance } from "./interface/IYieldSyncGovernance.sol";
 
 
 /**
-* @title IglooFiGovernance
+* @title YieldSyncGovernance
 */
-contract IglooFiGovernance is
+contract YieldSyncGovernance is
 	AccessControlEnumerable,
-	IIglooFiGovernance
+	IYieldSyncGovernance
 {
-	/* [state-variables] */
-	// [internal]
-	mapping (string => bytes32) internal _governanceRoles;
+	// [mapping]
+	mapping (string role => bytes32 roleHash) public role_roleHash;
 
 
-	/* [constructor] */
 	constructor ()
 	{
-		// [add] `_governanceRoles`
-		_governanceRoles["DEFAULT_ADMIN_ROLE"] = DEFAULT_ADMIN_ROLE;
+		role_roleHash["DEFAULT_ADMIN_ROLE"] = DEFAULT_ADMIN_ROLE;
 
-		// [add] msg.sender to DEFAULT_ADMIN_ROLE on `AccessControlEnumerable`
-		_setupRole(_governanceRoles["DEFAULT_ADMIN_ROLE"], _msgSender());
+		_setupRole(role_roleHash["DEFAULT_ADMIN_ROLE"], _msgSender());
 	}
 
-
-	/// @inheritdoc IIglooFiGovernance
-	function governanceRoles(string memory role)
+	/// @inheritdoc IYieldSyncGovernance
+	function addRole_roleHash(string memory role)
 		public
-		view
-		returns (bytes32)
+		override
+		onlyRole(role_roleHash["DEFAULT_ADMIN_ROLE"])
 	{
-		return _governanceRoles[role];
-	}
+		role_roleHash[role] = keccak256(abi.encodePacked(role));
 
-	/// @inheritdoc IIglooFiGovernance
-	function addGovernanceRole(string memory role)
-		public
-		onlyRole(_governanceRoles["DEFAULT_ADMIN_ROLE"])
-	{
-		// [add] `_governanceRoles`
-		_governanceRoles[role] = keccak256(abi.encodePacked(role));
-
-		// [update] `AccessControlEnumerable` → `_roles`
-		_setRoleAdmin(_governanceRoles[role], DEFAULT_ADMIN_ROLE);
+		_setRoleAdmin(role_roleHash[role], DEFAULT_ADMIN_ROLE);
 	}
 }
 
 
 /*
-*    ___________   ____  ____    ________
-*   /  _/ ___/ /  / __ \/ __ \  / __/  _/
-*  _/ // (_ / /__/ /_/ / /_/ / / _/_/ /  
-* /___/\___/____/\____/\____/ /_/ /___/  
-*                                        
-*        ⢀⣤⣴⡆⢰⣶⣤⣀
-*       ⠚⠛⠛⠛⠃⠘⠛⠛⠛⠛⠂
-*    ⣠⣾⣿⠏⢠⣾⣿⣿⣿⣿⣿⣦⠈⢿⣿⣦
-*   ⠐⠛⠛⠛ ⠛⠛⠛⠛⠛⠛⠛⠛⠃⠘⠛⠛⠓
-*  ⢰⠇⣾⣿⣿⣿⣿⣿⣿⡇⢸⣿⣿⣿⠏⣰⣿⣿⡏⢠⣾⣿⡟⠁⠸⣷
-*  ⣉⣀⣉⣉⣉⠉⣉⣉⣉⣁⣈⣉⣉⡉ ⣉⣉⣉ ⣈⣉⣉    ⣿⡇
-* ⠸⠿⠿⠿⠿⠿ ⠿⠿⠿⠿⠿⠿⠿⠟ ⠿⠿⠿ ⠿⠿⠿    ⠻⠇
+* __  ___      __    __   _____
+* \ \/ (_)__  / /___/ /  / ___/__  ______  _____
+*  \  / / _ \/ / __  /   \__ \/ / / / __ \/ ___/
+*  / / /  __/ / /_/ /   ___/ / /_/ / / / / /__
+* /_/_/\___/_/\__,_/   /____/\__, /_/ /_/\___/
+*                           /____/
 */
