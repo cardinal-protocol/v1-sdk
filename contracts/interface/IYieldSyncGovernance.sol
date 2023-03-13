@@ -27,7 +27,7 @@ interface IYieldSyncGovernance is
 	* @notice Add to role_roleHash
 	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
 	* @dev [add] `role_roleHash`
-	*      [update] `AccessControlEnumerable` → `_role`
+	*      [update] AccessControlEnumerable → Add `_role`
 	* @param role {string}
 	*/
 	function addRole_roleHash(string memory role)
