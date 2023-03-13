@@ -23,9 +23,9 @@ struct WithdrawalRequest {
 
 
 /**
-* @title IIglooFiV1Vault
+* @title IYieldSyncV1Vault
 */
-interface IIglooFiV1Vault is
+interface IYieldSyncV1Vault is
 	IAccessControlEnumerable,
 	IERC1271
 {

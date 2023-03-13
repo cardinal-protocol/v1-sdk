@@ -1,1 +1,1 @@
-# Igloo Fi - V1-SDK
+# Yield Sync - V1-SDK
