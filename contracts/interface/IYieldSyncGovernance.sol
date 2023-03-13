@@ -12,7 +12,7 @@ interface IYieldSyncGovernance is
 	IAccessControlEnumerable
 {
 	/**
-	* @notice Get
+	* @notice Get roleHash
 	* @dev [!restriction]
 	* @dev [view-mapping]
 	* @return {bytes32}
