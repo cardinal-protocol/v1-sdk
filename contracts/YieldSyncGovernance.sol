@@ -15,35 +15,34 @@ contract YieldSyncGovernance is
 	IYieldSyncGovernance
 {
 	// [mapping]
-	mapping (string role => bytes32 roleHash) public role_roleHash;
+	mapping (string role => bytes32 roleHash) public roleString_roleHash;
 
 
 	constructor ()
 	{
-		role_roleHash["DEFAULT_ADMIN_ROLE"] = DEFAULT_ADMIN_ROLE;
+		roleString_roleHash["DEFAULT_ADMIN_ROLE"] = DEFAULT_ADMIN_ROLE;
 
-		_setupRole(role_roleHash["DEFAULT_ADMIN_ROLE"], _msgSender());
+		_setupRole(roleString_roleHash["DEFAULT_ADMIN_ROLE"], _msgSender());
 	}
 
 
 	/// @inheritdoc IYieldSyncGovernance
-	function addRole_roleHash(string memory role)
+	function addRoleString_roleHash(string memory roleString)
 		public
 		override
-		onlyRole(role_roleHash["DEFAULT_ADMIN_ROLE"])
+		onlyRole(roleString_roleHash["DEFAULT_ADMIN_ROLE"])
 	{
-		role_roleHash[role] = keccak256(abi.encodePacked(role));
+		roleString_roleHash[roleString] = keccak256(abi.encodePacked(roleString));
 
-		_setRoleAdmin(role_roleHash[role], DEFAULT_ADMIN_ROLE);
+		_setRoleAdmin(roleString_roleHash[roleString], DEFAULT_ADMIN_ROLE);
 	}
 }
 
-
 /*
-* __  ___      __    __   _____
-* \ \/ (_)__  / /___/ /  / ___/__  ______  _____
-*  \  / / _ \/ / __  /   \__ \/ / / / __ \/ ___/
-*  / / /  __/ / /_/ /   ___/ / /_/ / / / / /__
-* /_/_/\___/_/\__,_/   /____/\__, /_/ /_/\___/
-*                           /____/
+* ██╗   ██╗██╗███████╗██╗     ██████╗     ███████╗██╗   ██╗███╗   ██╗ ██████╗
+* ╚██╗ ██╔╝██║██╔════╝██║     ██╔══██╗    ██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝
+*  ╚████╔╝ ██║█████╗  ██║     ██║  ██║    ███████╗ ╚████╔╝ ██╔██╗ ██║██║
+*   ╚██╔╝  ██║██╔══╝  ██║     ██║  ██║    ╚════██║  ╚██╔╝  ██║╚██╗██║██║
+*    ██║   ██║███████╗███████╗██████╔╝    ███████║   ██║   ██║ ╚████║╚██████╗
+*    ╚═╝   ╚═╝╚══════╝╚══════╝╚═════╝     ╚══════╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝
 */
