@@ -37,8 +37,8 @@ interface IYieldSyncV1Vault is
 	event UpdatedSignatureManger(address signatureManager);
 	event UpdatedWithdrawalDelaySeconds(uint256 withdrawalDelaySeconds);
 	event UpdatedWithdrawalRequest(WithdrawalRequest withdrawalRequest);
-	event VoterVoted(uint256 withdrawalRequestId, address indexed voter, bool vote);
-	event WithdrawalRequestReadyToBeProccessed(uint256 withdrawalRequestId);
+	event MemberVoted(uint256 withdrawalRequestId, address indexed member, bool vote);
+	event WithdrawalRequestReadyToBeProcessed(uint256 withdrawalRequestId);
 
 
 	receive ()
@@ -49,6 +49,19 @@ interface IYieldSyncV1Vault is
 	fallback ()
 		external
 		payable
+	;
+
+
+	/**
+	* @notice Address of signature manager
+	* @dev [!restriction]
+	* @dev [view-address]
+	* @return {address}
+	*/
+	function yieldSyncV1VaultRecord()
+		external
+		view
+		returns (address)
 	;
 
 	/**
@@ -64,15 +77,15 @@ interface IYieldSyncV1Vault is
 	;
 
 	/**
-	* @notice AccessControlEnumerable role
+	* @notice Against Vote Count Required
 	* @dev [!restriction]
-	* @dev [view-bytes32]
+	* @dev [view-uint256]
 	* @return {uint256}
 	*/
-	function VOTER()
+	function againstVoteCountRequired()
 		external
 		view
-		returns (bytes32)
+		returns (uint256)
 	;
 
 	/**
@@ -82,18 +95,6 @@ interface IYieldSyncV1Vault is
 	* @return {uint256}
 	*/
 	function forVoteCountRequired()
-		external
-		view
-		returns (uint256)
-	;
-
-	/**
-	* @notice Against Vote Count Required
-	* @dev [!restriction]
-	* @dev [view-uint256]
-	* @return {uint256}
-	*/
-	function againstVoteCountRequired()
 		external
 		view
 		returns (uint256)
@@ -118,7 +119,7 @@ interface IYieldSyncV1Vault is
 	* @dev [view-uint256[]]
 	* @return {uint256[]}
 	*/
-	function openWithdrawalRequestIds()
+	function idsOfOpenWithdrawalRequests()
 		external
 		view
 		returns (uint256[] memory)
@@ -131,35 +132,55 @@ interface IYieldSyncV1Vault is
 	* @param withdrawalRequestId {uint256}
 	* @return {WithdrawalRequest}
 	*/
-	function withdrawalRequest(uint256 withdrawalRequestId)
+	function withdrawalRequestId_withdralRequest(uint256 withdrawalRequestId)
 		external
 		view returns (WithdrawalRequest memory)
 	;
 
 
 	/**
-	* @notice Assign VOTER to an address on AccessControlEnumerable
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
-	* @dev [add] address to VOTER on `AccessControlEnumerable`
+	* @notice Assign Admin to an address on YieldSyncV1Record
+	* @dev [restriction] YieldSyncV1Record → admin
+	* @dev [add] address to admin on `YieldSyncV1Record`
 	* @param targetAddress {address}
 	*/
-	function addVoter(address targetAddress)
+	function addAdmin(address targetAddress)
 		external
 	;
 
 	/**
-	* @notice Remove a voter
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
-	* @dev [remove] address with VOTER on `AccessControlEnumerable`
-	* @param voter {address} Address of the voter to remove
-	*/	
-	function removeVoter(address voter)
+	* @notice Remove a member
+	* @dev [restriction] YieldSyncV1Record → admin
+	* @dev [remove] address with admin on `YieldSyncV1Record`
+	* @param member {address} Address of the member to remove
+	*/
+	function removeAdmin(address member)
+		external
+	;
+
+	/**
+	* @notice Assign member to an address on YieldSyncV1Record
+	* @dev [restriction] YieldSyncV1Record → admin
+	* @dev [add] address to member on `YieldSyncV1Record`
+	* @param targetAddress {address}
+	*/
+	function addMember(address targetAddress)
+		external
+	;
+
+	/**
+	* @notice Remove a member
+	* @dev [restriction] YieldSyncV1Record → admin
+	* @dev [remove] address with member on `YieldSyncV1Record`
+	* @param member {address} Address of the member to remove
+	*/
+	function removeMember(address member)
 		external
 	;
 
 	/**
 	* @notice Delete withdrawalRequest & all associated values
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [restriction] YieldSyncV1Record → admin
 	* @dev [call][internal] {_deleteWithdrawalRequest}
 	* @param withdrawalRequestId {uint256}
 	* Emits: `DeletedWithdrawalRequest`
@@ -170,7 +191,7 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Update withdrawalRequest
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [restriction] YieldSyncV1Record → admin
 	* @dev [update] `_withdrawalRequest`
 	* @param withdrawalRequestId {uint256}
 	* @param __withdrawalRequest {WithdrawalRequest}
@@ -182,7 +203,7 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Update Against Vote Count Required
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [restriction] YieldSyncV1Record → admin
 	* @dev [update] `againstVoteCountRequired`
 	* @param _againstVoteCountRequired {uint256}
 	* Emits: `UpdatedAgainstVoteCountRequired`
@@ -193,7 +214,7 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Update For Vote Count Required
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [restriction] YieldSyncV1Record → admin
 	* @dev [update] `forVoteCountRequired`
 	* @param _forVoteCountRequired {uint256}
 	* Emits: `UpdatedRequiredVoteCount`
@@ -204,7 +225,7 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Update Signature Manager Contract
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [restriction] YieldSyncV1Record → admin
 	* @dev [update] `signatureManager`
 	* @param _signatureManager {address}
 	*/
@@ -214,7 +235,7 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Update `withdrawalDelaySeconds`
-	* @dev [restriction] AccessControlEnumerable → DEFAULT_ADMIN_ROLE
+	* @dev [restriction] YieldSyncV1Record → admin
 	* @dev [update] `withdrawalDelaySeconds` to new value
 	* @param _withdrawalDelaySeconds {uint256}
 	* Emits: `UpdatedWithdrawalDelaySeconds`
@@ -226,7 +247,7 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Create a withdrawalRequest
-	* @dev [restriction] AccessControlEnumerable → VOTER
+	* @dev [restriction] YieldSyncV1Record → member
 	* @dev [increment] `_withdrawalRequestId`
 	*      [add] `_withdrawalRequest` value
 	*      [push-into] `_withdrawalRequestIds`
@@ -253,12 +274,12 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Vote on withdrawalRequest
-	* @dev [restriction] AccessControlEnumerable → VOTER
+	* @dev [restriction] YieldSyncV1Record → member
 	* @dev [update] `_withdrawalRequest`
 	* @param withdrawalRequestId {uint256}
 	* @param vote {bool} true (approve) or false (deny)
-	* Emits: `WithdrawalRequestReadyToBeProccessed`
-	* Emits: `VoterVoted`
+	* Emits: `WithdrawalRequestReadyToBeProcessed`
+	* Emits: `MemberVoted`
 	*/
 	function voteOnWithdrawalRequest(uint256 withdrawalRequestId, bool vote)
 		external
@@ -266,7 +287,7 @@ interface IYieldSyncV1Vault is
 
 	/**
 	* @notice Process withdrawalRequest with given `withdrawalRequestId`
-	* @dev [restriction] AccessControlEnumerable → VOTER
+	* @dev [restriction] YieldSyncV1Record → member
 	* @dev [erc20-transfer]
 	*      [decrement] `_tokenBalance`
 	*      [call][internal] `_deleteWithdrawalRequest`
