@@ -28,7 +28,7 @@ struct WithdrawalRequest {
 interface IYieldSyncV1Vault is
 	IAccessControlEnumerable,
 	IERC1271
-{{
+{
 	event CreatedWithdrawalRequest(uint256 withdrawalRequestId);
 	event DeletedWithdrawalRequest(uint256 withdrawalRequestId);
 	event TokensWithdrawn(address indexed withdrawer, address indexed token, uint256 amount);
