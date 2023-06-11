@@ -1,6 +1,6 @@
 {
   "name": "@yield-sync/v1-sdk",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +17,7 @@
   "homepage": "https://github.com/yield-sync/v1-sdk#readme",
   "description": "",
   "dependencies": {
-    "@openzeppelin/contracts": "4.8.2",
-    "@openzeppelin/contracts-upgradeable": "4.8.2"
+    "@openzeppelin/contracts": "4.9.1",
+    "@openzeppelin/contracts-upgradeable": "4.9.1"
   }
 }
