@@ -17,7 +17,7 @@ struct TransferRequest {
 	uint256 forVoteCount;
 	uint256 againstVoteCount;
 	uint256 latestRelevantForVoteTime;
-	address[] votedVoters;
+	address[] votedMembers;
 }
 
 
