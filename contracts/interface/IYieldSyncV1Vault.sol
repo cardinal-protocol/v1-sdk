@@ -14,8 +14,8 @@ struct TransferRequest {
 	uint256 tokenId;
 	uint256 amount;
 	address to;
-	uint256 voteForCount;
-	uint256 voteAgainstCount;
+	uint256 forVoteCount;
+	uint256 againstVoteCount;
 	uint256 latestRelevantForVoteTime;
 	address[] votedVoters;
 }
