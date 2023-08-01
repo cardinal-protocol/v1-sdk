@@ -6,6 +6,7 @@ import { IAccessControlEnumerable } from "@openzeppelin/contracts/access/IAccess
 import { IERC1271 } from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 import { ITransferRequestProtocol, TransferRequest } from "./ITransferRequestProtocol.sol";
+import { IYieldSyncV1VaultAccessControl } from "./IYieldSyncV1VaultAccessControl.sol";
 
 
 interface IYieldSyncV1Vault is
@@ -27,17 +28,6 @@ interface IYieldSyncV1Vault is
 		payable
 	;
 
-
-	/**
-	* @notice YieldSyncV1Vault Contract Address
-	* @dev [view-address]
-	* @return {address}
-	*/
-	function YieldSyncV1VaultAccessControl()
-		external
-		view
-		returns (address)
-	;
 
 	/**
 	* @notice SignatureProtocol Contract Address
@@ -62,14 +52,14 @@ interface IYieldSyncV1Vault is
 	;
 
 	/**
-	* @notice Process TransferRequest Locked
-	* @dev [view-bool]
-	* @return {bool}
+	* @notice YieldSyncV1VaultAccessControl Interfaced
+	* @dev [view-address]
+	* @return {IYieldSyncV1VaultAccessControl}
 	*/
-	function processTransferRequestLocked()
+	function YieldSyncV1VaultAccessControl()
 		external
 		view
-		returns (bool)
+		returns (IYieldSyncV1VaultAccessControl)
 	;
 
 
@@ -139,11 +129,11 @@ interface IYieldSyncV1Vault is
 	* @dev [restriction] `YieldSyncV1Record` → member
 	* @dev [erc20-transfer]
 	*      [decrement] `_tokenBalance`
-	*      [call][internal] `_yieldSyncV1VaultAddress_transferRequestId_transferRequestDelete`
+	*      [call][internal] `_yieldSyncV1Vault_transferRequestId_transferRequestDelete`
 	* @param transferRequestId {uint256} Id of the TransferRequest
 	* Emits: `TokensTransferred`
 	*/
-	function yieldSyncV1VaultAddress_transferRequestId_transferRequestProcess(uint256 transferRequestId)
+	function yieldSyncV1Vault_transferRequestId_transferRequestProcess(uint256 transferRequestId)
 		external
 	;
 
