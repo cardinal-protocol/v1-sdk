@@ -20,6 +20,7 @@ contract YieldSyncGovernance is
 		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 	}
 
+
 	/// @inheritdoc IYieldSyncGovernance
 	function payToUpdate(address _payTo)
 		public
