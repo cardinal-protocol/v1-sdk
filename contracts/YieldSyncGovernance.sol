@@ -11,6 +11,7 @@ contract YieldSyncGovernance is
 	AccessControlEnumerable,
 	IYieldSyncGovernance
 {
+	/// @inheritdoc IYieldSyncGovernance
 	address public override payTo;
 
 
@@ -19,7 +20,7 @@ contract YieldSyncGovernance is
 		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 	}
 
-
+	/// @inheritdoc IYieldSyncGovernance
 	function payToUpdate(address _payTo)
 		public
 		override
