@@ -2,7 +2,6 @@
 pragma solidity ^0.8.18;
 
 
-import { IAccessControlEnumerable } from "@openzeppelin/contracts/access/IAccessControlEnumerable.sol";
 import { IERC1271 } from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 import { ITransferRequestProtocol, TransferRequest } from "./ITransferRequestProtocol.sol";
@@ -10,7 +9,6 @@ import { IYieldSyncV1VaultAccessControl } from "./IYieldSyncV1VaultAccessControl
 
 
 interface IYieldSyncV1Vault is
-	IAccessControlEnumerable,
 	IERC1271
 {
 	event TokensTransferred(address indexed to, address indexed token, uint256 amount);
