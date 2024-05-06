@@ -4,16 +4,30 @@ pragma solidity ^0.8.18;
 
 import { AccessControlEnumerable } from "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
+import { IYieldSyncGovernance } from "./interface/IYieldSyncGovernance.sol";
 
-/**
-* @title YieldSyncGovernance
-*/
+
 contract YieldSyncGovernance is
-	AccessControlEnumerable
+	AccessControlEnumerable,
+	IYieldSyncGovernance
 {
+	address public override payTo;
+
+
 	constructor ()
 	{
 		_setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+	}
+
+
+	function payToUpdate(address _payTo)
+		public
+		override
+		onlyRole(DEFAULT_ADMIN_ROLE)
+	{
+		require(_payTo != address(0), "!(_payTo != address(0))");
+
+		payTo = _payTo;
 	}
 }
 
