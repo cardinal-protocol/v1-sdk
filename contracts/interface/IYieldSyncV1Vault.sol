@@ -2,18 +2,15 @@
 pragma solidity ^0.8.18;
 
 
-import { IERC1271 } from "@openzeppelin/contracts/interfaces/IERC1271.sol";
-
 import { ITransferRequestProtocol, TransferRequest } from "./ITransferRequestProtocol.sol";
-import { IYieldSyncV1VaultAccessControl } from "./IYieldSyncV1VaultAccessControl.sol";
+import { IYieldSyncV1VaultRegistry } from "./IYieldSyncV1VaultRegistry.sol";
 
 
-interface IYieldSyncV1Vault is
-	IERC1271
+interface IYieldSyncV1Vault
 {
-	event TokensTransferred(address indexed to, address indexed token, uint256 amount);
-	event UpdatedSignatureProtocol(address signatureProtocol);
-	event ProcessTransferRequestFailed(uint256 transferRequestId);
+	event TokensTransferred(address indexed _to, address indexed _token, uint256 _amount);
+	event UpdatedSignatureProtocol(address _signatureProtocol);
+	event ProcessTransferRequestFailed(uint256 _transferRequestId);
 
 
 	receive ()
@@ -50,14 +47,14 @@ interface IYieldSyncV1Vault is
 	;
 
 	/**
-	* @notice YieldSyncV1VaultAccessControl Interfaced
+	* @notice YieldSyncV1VaultRegistry Interfaced
 	* @dev [view-address]
-	* @return {IYieldSyncV1VaultAccessControl}
+	* @return {IYieldSyncV1VaultRegistry}
 	*/
-	function YieldSyncV1VaultAccessControl()
+	function YieldSyncV1VaultRegistry()
 		external
 		view
-		returns (IYieldSyncV1VaultAccessControl)
+		returns (IYieldSyncV1VaultRegistry)
 	;
 
 
@@ -65,9 +62,9 @@ interface IYieldSyncV1Vault is
 	* @notice Add Admin
 	* @dev [restriction] `YieldSyncV1Record` → admin
 	* @dev [add] admin on `YieldSyncV1Record`
-	* @param targetAddress {address}
+	* @param _target {address}
 	*/
-	function adminAdd(address targetAddress)
+	function adminAdd(address _target)
 		external
 	;
 
@@ -75,9 +72,9 @@ interface IYieldSyncV1Vault is
 	* @notice Remove Admin
 	* @dev [restriction] `YieldSyncV1Record` → admin
 	* @dev [remove] admin on `YieldSyncV1Record`
-	* @param admin {address}
+	* @param _admin {address}
 	*/
-	function adminRemove(address admin)
+	function adminRemove(address _admin)
 		external
 	;
 
@@ -85,9 +82,9 @@ interface IYieldSyncV1Vault is
 	* @notice Add Member
 	* @dev [restriction] `YieldSyncV1Record` → admin
 	* @dev [add] member `YieldSyncV1Record`
-	* @param targetAddress {address}
+	* @param _target {address}
 	*/
-	function memberAdd(address targetAddress)
+	function memberAdd(address _target)
 		external
 	;
 
@@ -95,9 +92,9 @@ interface IYieldSyncV1Vault is
 	* @notice Remove Member
 	* @dev [restriction] `YieldSyncV1Record` → admin
 	* @dev [remove] member on `YieldSyncV1Record`
-	* @param member {address}
+	* @param _member {address}
 	*/
-	function memberRemove(address member)
+	function memberRemove(address _member)
 		external
 	;
 
@@ -123,24 +120,25 @@ interface IYieldSyncV1Vault is
 
 
 	/**
-	* @notice Process transferRequest with given `transferRequestId`
-	* @dev [restriction] `YieldSyncV1Record` → member
-	* @dev [erc20-transfer]
-	*      [decrement] `_tokenBalance`
-	*      [call][internal] `_yieldSyncV1Vault_transferRequestId_transferRequestDelete`
-	* @param transferRequestId {uint256} Id of the TransferRequest
-	* Emits: `TokensTransferred`
-	*/
-	function yieldSyncV1Vault_transferRequestId_transferRequestProcess(uint256 transferRequestId)
-		external
-	;
-
-	/**
 	* @notice Renounce Membership
 	* @dev [restriction] `YieldSyncV1Record` → member
 	* @dev [remove] member on `YieldSyncV1Record`
 	*/
 	function renounceMembership()
+		external
+	;
+
+
+	/**
+	* @notice Process transferRequest with given `transferRequestId`
+	* @dev [restriction] `YieldSyncV1Record` → member
+	* @dev [erc20-transfer]
+	*      [decrement] `_tokenBalance`
+	*      [call][internal] `_yieldSyncV1Vault_transferRequestId_transferRequestDelete`
+	* @param _transferRequestId {uint256} Id of the TransferRequest
+	* Emits: `TokensTransferred`
+	*/
+	function yieldSyncV1Vault_transferRequestId_transferRequestProcess(uint256 _transferRequestId)
 		external
 	;
 }
