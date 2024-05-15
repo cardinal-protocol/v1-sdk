@@ -1,0 +1,7 @@
+{
+	"solidity.remappingsUnix": [
+		"@openzeppelin/=node_modules/@openzeppelin/",
+		"@yield-sync/=node_modules/@yield-sync/"
+	],
+	"solidity.packageDefaultDependenciesDirectory": "node_modules"
+}

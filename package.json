@@ -1,6 +1,6 @@
 {
   "name": "@yield-sync/v1-sdk",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +17,22 @@
   "homepage": "https://github.com/yield-sync/v1-sdk#readme",
   "description": "",
   "dependencies": {
-    "@openzeppelin/contracts": "4.9.2",
-    "@openzeppelin/contracts-upgradeable": "4.9.2"
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@nomiclabs/hardhat-solhint": "^3.0.0",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@openzeppelin/contracts-upgradeable": "^4.9.3",
+    "@yield-sync/governance": "^0.0.36",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.16",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.12",
+    "chai": "^4.4.1",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.12.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   }
 }
