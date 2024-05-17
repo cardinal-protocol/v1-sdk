@@ -29,6 +29,7 @@
     "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.12",
+    "@yield-sync/utilities": "^0.0.3",
     "chai": "^4.4.1",
     "ethers": "^5.7.2",
     "hardhat": "^2.12.6",
