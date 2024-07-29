@@ -1,6 +1,6 @@
 {
   "name": "@yield-sync/v1-sdk",
-  "version": "0.0.56",
+  "version": "0.0.57",
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,7 +25,7 @@
     "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.12",
-    "@yield-sync/governance": "^0.0.38",
+    "@yield-sync/governance": "^0.0.39",
     "@yield-sync/utilities": "^0.0.6",
     "chai": "^4.4.1",
     "dotenv": "^16.0.1",
