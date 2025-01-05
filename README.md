@@ -3,5 +3,5 @@
 # For Repo Manager
 
 ```shell
-npm publish --public
+npm publish --access public
 ```
