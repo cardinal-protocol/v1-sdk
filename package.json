@@ -1,20 +1,20 @@
 {
   "name": "@yield-sync/sdk",
-  "version": "0.0.57",
+  "version": "0.0.58",
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yield-sync/v1-sdk.git"
+    "url": "git+https://github.com/yield-sync/sdk.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/yield-sync/v1-sdk/issues"
+    "url": "https://github.com/yield-sync/sdk/issues"
   },
-  "homepage": "https://github.com/yield-sync/v1-sdk#readme",
+  "homepage": "https://github.com/yield-sync/sdk#readme",
   "description": "",
   "dependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",

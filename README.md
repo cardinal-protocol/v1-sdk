@@ -1,4 +1,4 @@
-# Yield Sync - V1-SDK
+# Yield Sync - SDK
 
 # For Repo Manager
 
